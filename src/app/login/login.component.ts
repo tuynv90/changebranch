@@ -13,8 +13,7 @@ import { AppSettings } from "../app.setting";
   animations:[routerTransition()]
 })
 export class LoginComponent implements OnInit {
-
-  email: string = '';
+    email: string = '';
     password: string = '';
     alert: any = null;
     constructor(public router: Router, private loginService: LoginService) {
@@ -30,7 +29,7 @@ export class LoginComponent implements OnInit {
                     // Reach here if res.status >= 200 && <= 299
                     localStorage.setItem(AppSettings.TOKEN, data.access_token);
                     localStorage.setItem(AppSettings.USER, JSON.stringify(data.user));
-                    this.router.navigate(['/']);
+                    this.router.navigate(['page/dashboard']);
                 }else{
                     // alert('An error occurred:' + data.message);
                     this.alert = {

@@ -1,0 +1,52 @@
+thead{
+    font-family:'Open Sans SemiBold';
+    font-size: 15px;
+}
+tbody{
+    font-family:'Open Sans';
+    font-size: 15px;
+}
+table thead th{
+    vertical-align: middle;
+    text-align: center;
+}
+table tbody tr td{
+    vertical-align: middle;
+}
+.rate-per{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    input{
+        width: 120px;
+    }
+    select{
+        width: 120px;
+    }
+}
+.text-center{
+    text-align: center;
+}
+thead,.footer-table{
+    background-color: #c0ca03;
+}
+.date-time{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.request-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    label{
+        margin-right: 10%;
+    }
+    input{
+        width: 70%;
+    }
+}
+.land-transport > h4{
+    margin: 20px 0 20px 0;
+}

@@ -1,0 +1,669 @@
+<form #requestForm="ngForm">
+  <ngb-tabset>
+    <ngb-tab title="Request Form">
+      <ng-template ngbTabContent>
+        <div class="row">
+          <div class="col-xl-6 text-xs-center">
+            <div class="card-block">
+              <div *ngIf="alert">
+                <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
+              </div>
+            </div>
+            <div>
+
+              <div class="form-group request-row">
+                <label for="name">Accompanied (*)</label>
+                <input type="text" class="form-control" id="accompanied_by" required [(ngModel)]="showInfo.accompanied_by" name="accompanied_by"
+                  #accompanied_by="ngModel">
+                <div [hidden]="accompanied_by.valid || accompanied_by.pristine" class="alert alert-danger">
+                  Accompanied is required.
+                </div>
+              </div>
+              <div class="input-group date" data-provide="datepicker">
+                  <input type="text" class="form-control">
+                  <div class="input-group-addon">
+                      <span class="glyphicon glyphicon-th"></span>
+                  </div>
+              </div>
+              <div class="form-group request-row">
+                <label for="name">Trip To (*)</label>
+                <input type="text" class="form-control" id="travel_dest" required [(ngModel)]="showInfo.travel_dest" name="travel_dest"
+                  #travel_dest="ngModel">
+                <div [hidden]="travel_dest.valid || travel_dest.pristine" class="alert alert-danger">
+                  Trip To is required.
+                </div>
+              </div>
+
+              
+                <div class="form-group request-row">
+                  <label for="name">Start Date (*)</label>
+                  <input class="form-control" id="depart_datetime" required [(ngModel)]="showInfo.depart_datetime" type="date" [ngModelOptions]="{standalone: true}"
+                    name="depart_datetime" #depart_datetime value="{{showInfo.depart_datetime}}">
+
+                  <div [hidden]="depart_datetime.valid || depart_datetime.pristine" class="alert alert-danger">
+                    Start Date is required.
+                  </div>
+                </div>
+              
+              <div class="form-group">
+                <div class="input-group request-row">
+                  <label for="name">End Date (*)</label>
+                  <!-- <input class="form-control" placeholder="yyyy-mm-dd" id="return_datetime" required [(ngModel)]="showInfo.return_datetime"
+                    name="return_datetime" #return_datetime="ngModel" ngbDatepicker #d2="ngbDatepicker">
+                  <div class="input-group-addon" (click)="d2.toggle()">
+                    <span class="fa fa-calendar"></span>
+                  </div> -->
+                  <input class="form-control" id="return_datetime" required [(ngModel)]="showInfo.return_datetime" type="date" [ngModelOptions]="{standalone: true}"
+                  name="return_datetime" #return_datetime value="{{showInfo.return_datetime}}">
+                  <div [hidden]="return_datetime.valid || return_datetime.pristine" class="alert alert-danger">
+                    End Date is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="name">Purpose To Travel (*)</label>
+                <textarea rows="4" class="form-control" id="purpose" required [(ngModel)]="showInfo.purpose" name="purpose" #purpose="ngModel"></textarea>
+                <div [hidden]="purpose.valid || purpose.pristine" class="alert alert-danger">
+                  Purpose To Travel is required.
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="col-xl-4 text-xs-center">
+
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>
+        <b>BUSINESS TRAVEL & BUDGET</b>
+      </ng-template>
+      <ng-template ngbTabContent>
+        <div class="land-transport">
+          <h4>1. LAND TRANSPORT ( LOCAL / OUTSTATION / OVERSEAS ) </h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2"></th>
+                <th rowspan="2">#</th>
+                <th rowspan="2">TYPE OF VEHICLE</th>
+                <th rowspan="2">EXPENSES</th>
+                <th rowspan="2">TOTAL KM (A)</th>
+                <th rowspan="2">RATE PER KM(B)</th>
+                <th rowspan="2">CALCULATION</th>
+                <th colspan="2" scope="colgroup">GRAND TOTAL</th>
+                <th rowspan="2">REMARKS</th>
+              </tr>
+              <tr>
+                <th scope="col">USD</th>
+                <th scope="col">VND</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of landTransport">
+                <th>
+                  <input type="checkbox" (change)="checkRow(item.vehicle_id,$event,budgetType.land)">
+                </th>
+                <th scope="row">{{item.vehicle_id}}</th>
+                <td>{{item.vehicle_name}}</td>
+                <td class="text-center">{{item.expenses}}</td>
+                <td width="10%">
+                  <input #totalkm id="totalkm" type="number" value="{{item.totalkm}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.totalkm" (change)="onChangeTotalKM(item.vehicle_id)">
+                </td>
+                <td *ngIf="item.vehicle_id!= 3 && item.vehicle_id != 4 " class="rate-per">
+                  <!-- <input type="number" class="form-control" id="rate_per_km" name="rate_per_km" required [(ngModel)]="item.rate_per_km" #rate_per_km="ngModel"
+                    (change)="onChangeTotalKM(item.vehicle_id)"> -->
+                  <input #rate_per_km id="rate_per_km" type="number" value="{{item.rate_per_km}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.rate_per_km" (change)="onChangeTotalKM(item.vehicle_id)">
+                  <button (click)='changeCurrency(item.vehicle_id)'>{{item.currency_id==1 ? 'USD' : 'VND'}}</button>
+                  <td width="10%" *ngIf="item.vehicle_id== 3 || item.vehicle_id== 4" class="text-center">
+                    <label>VND {{item.rate_per_km}}</label>
+                  </td>
+                  <td>{{item.calculation}}</td>
+                  <td>{{item.grand_total}}</td>
+                  <td>{{item.grand_total_VND}}</td>
+                  <td>{{item.remark}}</td>
+              </tr>
+
+              <tr class="footer-table">
+                <td colspan="7" align="right" class="text-center">
+                  <b>LAND TRANSPORT-TOTAL</b>
+                </td>
+                <td class="text-center">{{totalUSD}}</td>
+                <td class="text-center">{{totalVND}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="deleteRow(budgetType.land)">Delete</button>
+            <!-- <button class="btn-primary" (click)="addRow()">Add Row</button> -->
+            <button class="btn-primary" (click)="save(budgetType.land)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.land)">Cancel</button>
+          </div>
+        </div>
+        <div class="air-transport">
+          <h4>2. AIR TRANSPORT ( LOCAL / OUTSTATION / OVERSEAS )</h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th colspan="8">FLIGHT DETAILS</th>
+                <th colspan="5">AIR FARE COMPARISON ü PLEASE TICK - BEST OPTION</th>
+              </tr>
+              <tr>
+                <th rowspan="2"></th>
+                <th rowspan="2">#</th>
+                <th rowspan="2">Date</th>
+                <th rowspan="2">FLIGHT #</th>
+                <th colspan="2" scope="colgroup">DESTINATION</th>
+                <th colspan="2" scope="colgroup">TIME</th>
+                <th rowspan="2">#</th>
+                <th>1ST OPTION</th>
+                <th>2ND OPTION</th>
+                <th>3RD OPTION</th>
+                <th rowspan="2">REMARKS</th>
+              </tr>
+              <tr>
+                <th scope="col">FROM</th>
+                <th scope="col">TO</th>
+                <th scope="col">DEPART</th>
+                <th scope="col">ARRIVE</th>
+                <th scope="col">VIETNAM AIR</th>
+                <th scope="col">VIETJET</th>
+                <th scope="col">Malindo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>VND</td>
+                <td>VND</td>
+                <td>VND</td>
+                <td></td>
+              </tr>
+              <tr *ngFor='let item of airTransport; let i = index;'>
+                <th>
+                  <input type="checkbox" (change)="checkRow(i,$event, budgetType.air)">
+                </th>
+                <td>{{i+1 }}</td>
+                <td>
+                  <input #flight_datetime id="flight_datetime" type="date" value="{{item.flight_datetime}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.flight_datetime" (change)="onChangeTotalKM(item.vehicle_id)">
+                </td>
+                <td>
+                  <input #flight_number id="flight_number" type="number" value="{{item.flight_number}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.flight_number">
+                </td>
+                <td>
+                  <input #dest_from id="dest_from" type="text" value="{{item.dest_from}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.dest_from">
+                </td>
+                <td>
+                  <input #dest_to id="dest_to" type="text" value="{{item.dest_to}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.dest_to">
+                </td>
+                <td>
+                  <input #depart_time id="depart_time" type="date" value="{{item.depart_time}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.depart_time">
+                </td>
+                <td>
+                  <input #arrive_time id="arrive_time" type="date" value="{{item.arrive_time}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.arrive_time">
+                </td>
+                <td>{{i+1}}</td>
+                <td>
+                  <input #first_opt_fee id="first_opt_fee" type="number" value="{{item.first_opt_fee}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.first_opt_fee" (change)="calSum()">
+                </td>
+                <td>
+                  <input #second_opt_fee id="second_opt_fee" type="number" value="{{item.second_opt_fee}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.second_opt_fee" (change)="calSum()">
+                </td>
+                <td>
+                  <input #third_opt_fee id="third_opt_fee" type="number" value="{{item.third_opt_fee}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.third_opt_fee" (change)="calSum()">
+                </td>
+                <td>
+                  <input #remarks id="remarks" type="text" value="{{item.remarks}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.remarks">
+                </td>
+              </tr>
+
+              <tr class="footer-table">
+                <td colspan="9" align="right" class="text-center">
+                  <b>TOTAL FLIGHT FARE</b>
+                </td>
+                <td class="text-center">{{firtFee}}</td>
+                <td class="text-center">{{secondFee}}</td>
+                <td class="text-center">{{threeFee}}</td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="deleteRow(budgetType.air)">Delete</button>
+            <button class="btn-primary" (click)="addRow(budgetType.air)">Add Row</button>
+            <button class="btn-primary" (click)="save(budgetType.air)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.air)">Cancel</button>
+          </div>
+        </div>
+        <div class="own-accommodation">
+          <h4>3. OWN ACCOMMODATION (OUTSTATION ONLY) </h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <td rowspan="2"></td>
+                <th rowspan="2">#</th>
+                <th colspan="2" scope="colgroup">DATES</th>
+                <th rowspan="2">TOTAL DAYS (A)</th>
+                <th rowspan="2">ACCOMM. ALLOWANCE W/O RECEIPT (B)</th>
+                <th rowspan="2">CALCULATION</th>
+                <th rowspan="2">G-TOTAL </th>
+                <th rowspan="2">REMARKS</th>
+              </tr>
+              <tr>
+                <th scope="col">CHECK IN</th>
+                <th scope="col">CHECK OUT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>VND</td>
+                <td></td>
+                <td>VND</td>
+                <td></td>
+              </tr>
+              <tr *ngFor="let item of ownAccom; let i = index">
+                <td>
+                  <input type="checkbox" (change)="checkRow(i,$event, budgetType.ownAccommodation)">
+                </td>
+                <td>{{i+1 }}</td>
+                <td>
+                  <input #checkin_date id="checkin_date" type="date" value="{{item.checkin_date}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.checkin_date" (change)="changeDate(i,budgetType.ownAccommodation)">
+                </td>
+                <td>
+                  <input #checkout_date id="checkout_date" type="date" value="{{item.checkout_date}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.checkout_date" (change)="changeDate(i,budgetType.ownAccommodation)">
+                </td>
+                <td>
+                  <input #total_days id="total_days" disabled type="number" value="{{item.total_days}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.total_days" (change)="calOwn(i)">
+                </td>
+                <td>
+                  <input #accomm_allowance id="accomm_allowance" type="number" value="{{item.accomm_allowance}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.accomm_allowance" (change)="calOwn(i)">
+                </td>
+                <td>
+                  <input #calculation id="calculation" type="number" disabled value="{{item.calculation}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.calculation">
+                </td>
+                <td>
+                  <input #grand_total id="grand_total" type="number" value="{{item.grand_total}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.grand_total">
+                </td>
+                <td>
+                  <input #remarks id="remarks" type="text" value="{{item.remarks}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.remarks">
+                </td>
+              </tr>
+
+              <tr class="footer-table">
+                <td colspan="7" align="right" class="text-center">
+                  <b>OWN ACCOMMODATION - TOTAL COST</b>
+                </td>
+                <td class="text-center">{{totalOwn}}</td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="deleteRow(budgetType.ownAccommodation)">Delete</button>
+            <button class="btn-primary" (click)="addRow(budgetType.ownAccommodation)">Add Row</button>
+            <button class="btn-primary" (click)="save(budgetType.ownAccommodation)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.ownAccommodation)">Cancel</button>
+          </div>
+        </div>
+        <div class="hotel-accommodation">
+          <h4>4. HOTEL ACCOMMODATION ( OUTSTATION / OVERSEAS ) </h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <td rowspan="2"></td>
+                <th rowspan="2">#</th>
+                <th rowspan="2">HOTEL / LOCATION</th>
+                <th colspan="2" scope="colgroup">DATES</th>
+                <th rowspan="2">TOTAL NIGHTS ( A )</th>
+                <th colspan="2" scope="colgroup">CORP. RATE ( B )</th>
+                <th colspan="2" scope="colgroup">VAT, ETC ( C )</th>
+                <th colspan="2" scope="colgroup">TOTAL ( B ) + ( C ) x ( A )</th>
+                <th rowspan="2">REMARKS</th>
+              </tr>
+              <tr>
+                <th scope="col">CHECK IN</th>
+                <th scope="col">CHECK OUT</th>
+                <th scope="col">USD</th>
+                <th scope="col">VND</th>
+                <th scope="col">USD</th>
+                <th scope="col">VND</th>
+                <th scope="col">USD</th>
+                <th scope="col">VND</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of hotelAccom; let i = index">
+                <td>
+                  <input type="checkbox" (change)="checkRow(i,$event, budgetType.hotel)">
+                </td>
+                <td>{{i+1 }}</td>
+                <td>
+                  <input #hotel id="hotel" type="text" value="{{item.hotel}}" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="item.hotel">
+                </td>
+                <td>
+                  <input #checkin_date id="checkin_date" type="date" value="{{item.checkin_date}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.checkin_date" (change)="changeDate(i, budgetType.hotel)">
+                </td>
+                <td>
+                  <input #checkout_date id="checkout_date" type="date" value="{{item.checkout_date}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.checkout_date" (change)="changeDate(i,budgetType.hotel)">
+                </td>
+                <td>
+                  <input #total_night id="total_night" disabled type="number" value="{{item.total_night}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.total_night">
+                </td>
+                <td>
+                  <input #corp_rate_USD id="corp_rate_USD" type="number" value="{{item.corp_rate_USD}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.corp_rate_USD" (change)="exchange(i,1, 'corp_rate_USD')">
+                </td>
+                <td>
+                  <input #corp_rate id="corp_rate" type="number" value="{{item.corp_rate}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.corp_rate" (change)="exchange(i,2,'corp_rate')">
+                </td>
+                <td>
+                  <input #vat_USD id="vat_USD" type="number" value="{{item.vat_USD}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.vat_USD" (change)="exchange(i,1,'vat_USD')">
+                </td>
+                <td>
+                  <input #vat id="vat" type="number" value="{{item.vat}}" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="item.vat"
+                    (change)="exchange(i,2,'vat')">
+                </td>
+                <td>
+                  <input #total_USD id="total_USD" disabled type="number" value="{{item.total_USD}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.total_USD">
+                </td>
+                <td>
+                  <input #total id="total" disabled type="number" value="{{item.total}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.total">
+                </td>
+                <td>
+                  <input #remarks id="remarks" type="number" value="{{item.remarks}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.remarks">
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{totalHotel}}</td>
+                <td></td>
+              </tr>
+
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="deleteRow(budgetType.hotel)">Delete</button>
+            <button class="btn-primary" (click)="addRow(budgetType.hotel)">Add Row</button>
+            <button class="btn-primary" (click)="save(budgetType.hotel)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.hotel)">Cancel</button>
+          </div>
+        </div>
+        <div class="meal-allowance">
+          <h4>5. SUBSISTENCE / MEALS ALLOWANCE ( OUTSTATION / OVERSEAS )</h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2">LEVEL</th>
+                <th colspan="4" scope="colgroup">OUTSTATION - SUB. / MEALS ALLOWANCE - RATES</th>
+                <th colspan="2" scope="colgroup">TRAVEL DATES </th>
+                <th rowspan="2">TOTAL DAYS (B)</th>
+                <th rowspan="2">DEDUCTION (C) ( ETD / ETA )</th>
+                <th rowspan="2">G-TOTAL (A) x (B) - C</th>
+              </tr>
+              <tr>
+                <th scope="col">BREAKFAST</th>
+                <th scope="col">LUNCH</th>
+                <th scope="col">DINNER</th>
+                <th scope="col">TOTAL</th>
+                <th scope="col">FROM</th>
+                <th scope="col">TO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mealAllowance">
+                <td>
+                  {{item.level}}
+                </td>
+                <td>
+                  <input #breakfast_allowance id="breakfast_allowance" type="number" value="{{item.breakfast_allowance}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.breakfast_allowance" (change)='calTotalMeal(item.no)'>
+                </td>
+                <td>
+                  <input #launch_allowance id="launch_allowance" type="number" value="{{item.launch_allowance}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.launch_allowance" (change)='calTotalMeal(item.no)'>
+                </td>
+                <td>
+                  <input #dinner_allowance id="dinner_allowance" type="number" value="{{item.dinner_allowance}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.dinner_allowance" (change)='calTotalMeal(item.no)'>
+                </td>
+                <td>
+                  <input #total disabled id="total" type="number" value="{{item.total}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.total">
+                </td>
+                <td>
+                  <input #travel_from id="travel_from" type="date" value="{{item.travel_from}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.travel_from" (change)="calMealDay(item.no)">
+                </td>
+                <td>
+                  <input #travel_to id="travel_to" type="date" value="{{item.travel_to}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.travel_to" (change)="calMealDay(item.no)">
+                </td>
+                <td>
+                  <input #total_days disabled id="total_days" type="number" value="{{item.total_days}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.total_days">
+                </td>
+                <td>
+                  <input #deduction id="deduction" type="number" value="{{item.deduction}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.deduction">
+                </td>
+                <td>
+                  <input #grand_total disabled id="grand_total" type="number" value="{{item.grand_total}}" [ngModelOptions]="{standalone: true}"
+                    class="form-control" [(ngModel)]="item.grand_total">
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{totalMeal}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="save(budgetType.meal)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.meal)">Cancel</button>
+          </div>
+        </div>
+        <div class="summary-budget">
+          <h4>6. SUMMARY OF BUSINESS TRAVEL BUDGET</h4>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th colspan="2" scope="colgroup">APPROVAL PAPER & BUDGET</th>
+                <th colspan="2" scope="colgroup">Date</th>
+                <th rowspan="2">Total days</th>
+                <th rowspan="2">VND</th>
+                <th rowspan="2">USD</th>
+                <th rowspan="2">MYR</th>
+                <th rowspan="2">G-TOTAL (VND)</th>
+                <th rowspan="2">REMARKS</th>
+              </tr>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">ITEMS</th>
+                <th scope="col">FROM</th>
+                <th scope="col">TO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of sumaryRequest; let i = index">
+                <td>{{i+1}}</td>
+                <td>{{item.allowance_name}}</td>
+                <td>{{item.depart_datetime}}</td>
+                <td>{{item.return_datetime}}</td>
+                <td>{{item.total_days}}</td>
+                <td>{{item.expense}}</td>
+                <td>{{item.usd}}</td>
+                <td>{{item.myr}}</td>
+                <td>{{item.g_total}}</td>
+                <td>{{item.remarks}}</td>
+              </tr>
+              <tr class="footer-table">
+                <td colspan="5" class="text-center">
+                  <b>Total budget</b>
+                </td>
+                <td class="text-center">{{totalBudget}}</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="save(budgetType.land)">Save</button>
+            <button class="btn-primary" (click)="resetLandTransport()">Cancel</button>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="DAILY REPORT OF BUSINESS TRAVEL">
+      <ng-template ngbTabContent>
+        <div>
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th colspan="8">A. ITINERARY </th>
+              </tr>
+              <tr>
+                <th colspan="8">SUMISSION BEFORE BUSINESS TRAVEL</th>
+              </tr>
+              <tr>
+                <th rowspan="2"></th>
+                <th rowspan="2">DAY #</th>
+                <th colspan="2" scope="colgroup">DATE</th>
+                <th colspan="3" scope="colgroup">TIME</th>
+                <th rowspan="2">VENUE</th>
+              </tr>
+              <tr>
+                <th scope="col">FROM</th>
+                <th scope="col">TO</th>
+                <th scope="col">FROM</th>
+                <th scope="col">TO</th>
+                <th scope="col">DURATION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor='let item of dailyReport; let i = index;'>
+                <th>
+                  <input type="checkbox" (change)="checkRow(i,$event, budgetType.beforeReport)">
+                </th>
+                <td>{{i+1 }}</td>
+                <td>
+                  <input #from_date id="from_date" type="date" value="{{item.from_date}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.from_date">
+                </td>
+                <td>
+                  <input #to_date id="to_date" type="date" value="{{item.to_date}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.to_date">
+                </td>
+                <td>
+                  <input #from_time id="from_time" type="time" value="{{item.from_time}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.from_time">
+                </td>
+                <td>
+                  <input #to_time id="to_time" type="time" value="{{item.to_time}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.to_time">
+                </td>
+                <td>
+                  <input #duration id="duration" type="number" value="{{item.duration}}" [ngModelOptions]="{standalone: true}" class="form-control"
+                    [(ngModel)]="item.duration">
+                </td>
+                <td>
+                  <input #vanue id="vanue" type="text" value="{{item.vanue}}" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="item.vanue">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div align="right">
+            <button class="btn-primary" (click)="deleteRow(budgetType.beforeReport)">Delete</button>
+            <button class="btn-primary" (click)="addRow(budgetType.beforeReport)">Add Row</button>
+            <button class="btn-primary" (click)="save(budgetType.beforeReport)">Save</button>
+            <button class="btn-primary" (click)="reset(budgetType.beforeReport)">Cancel</button>
+          </div>
+        </div>
+
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Travel + Entertainment Expenses" [disabled]="true">
+      <ng-template ngbTabContent>
+        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master
+          cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher
+          synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan
+          aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Business Travel Report" [disabled]="true">
+      <ng-template ngbTabContent>
+        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master
+          cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher
+          synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan
+          aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+  <button *ngIf="isEdit" type="submit" class="btn btn-success" (click)="updateRequest()" [disabled]="!requestForm.form.valid">Edit</button>
+  <button *ngIf="!isEdit" type="submit" class="btn btn-success" (click)="addRequest()" [disabled]="!requestForm.form.valid">Save</button>
+  <button type="button" class="btn btn-default" (click)="goback()">Goback</button>
+</form>

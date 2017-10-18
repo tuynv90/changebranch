@@ -1,0 +1,45 @@
+<div>
+  <!-- <app-page-header [heading]="'Tenant'" [icon]="'fa fa-chrome'"></app-page-header> -->
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="card mb-3">
+      <div class="card-header">
+          <!-- <i class="fa fa-plus"><a [router-link]="['/tenant/detail/new']"></a></i> -->
+          <a routerLink="/page/department/detail/new" routerLinkActive="active"><i class="fa fa-plus"></i></a>
+          &nbsp;&nbsp;
+          <span>List Department </span>
+
+      </div>
+      <div class="card-block table-responsive">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>No</th>
+                      <th>Department Name</th>
+                      <th>Tenant Name</th>
+                      <th>Manager Name</th>
+                      <th>Update</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of departments; let i=index">
+                      <th scope="row">{{i+1}}</th>
+                      <td>{{item.dept_name}}</td>
+                      <td>{{item.tenant_name}}</td>
+                      <td>{{item.manager_name}}</td>
+                      <td><button type="button" class="btn btn-sm btn-info" (click)="editDepartment(item.dept_id)">Edit</button>&nbsp;
+                          <app-modal-confirm [id]="item.dept_id" [title]="'Department'" (deleted)="deleted($event)"></app-modal-confirm>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="row" *ngIf="totalItems > perpage" >
+              <div class="col col-xl-4"></div>
+              <div class="col col-xl-5">
+                  <ngb-pagination [collectionSize]="totalItems" [pageSize]="perpage" [(page)]="page" [maxSize]="7" [rotate]="false" (pageChange)="loadPage($event)"></ngb-pagination>
+              </div>
+              <div class="col col-xl-3"></div>
+          </div>
+      </div>
+  </div>
+
+</div>

@@ -1,3 +1,51 @@
-<p>
-  sidebar works!
-</p>
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+  <ul class="list-group">
+      <a routerLink="/page/dashboard" routerLinkActive="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Dashboard' }}
+      </a>
+      <a routerLink="/page/request" routerLinkActive="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;{{ 'Request' }}
+      </a>
+      <a routerLink="/page/tables" routerLinkActive="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-table"></i>&nbsp;{{ 'Approve' }}
+      </a>
+      <div class="nested-menu">
+          <a class="list-group-item" (click)="addExpandClass('pages')">
+              <span><i class="fa fa-plus"></i>&nbsp; {{ 'Management' }}</span>
+          </a>
+          <li class="nested" [class.expand]="showMenu === 'pages'">
+              <ul class="submenu">
+                  <li>
+                      <a routerLink="/page/tenant" routerLinkActive="['router-link-active']" class="list-group-item">
+                          <span><i class="fa fa-chrome"></i> &nbsp;{{ 'Tenant' }}</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a routerLink='/page/department' routerLinkActive="['router-link-active']" class="list-group-item">
+                              <span><i class="fa fa-bank"></i> &nbsp;{{ 'Department' }}</span>
+                          </a>
+
+                  </li>
+                  <li>
+                      <a routerLink="/page/jobgrade" routerLinkActive="['router-link-active']" class="list-group-item">
+                              <span><i class="fa fa-briefcase"></i> &nbsp;{{ 'Jobgrade' }}</span>
+                          </a>
+
+                  </li>
+                  <li>
+                      <a routerLink="/page/role" routerLinkActive="['router-link-active']" class="list-group-item">
+                              <span><i class="fa fa-address-book"></i> &nbsp;{{ 'Role' }}</span>
+                          </a>
+
+                  </li>
+                  <li>
+                      <a routerLink="/page/user" routerLinkActive="['router-link-active']" class="list-group-item">
+                              <span><i class="fa fa-address-book-o"></i> &nbsp;{{ 'User' }}</span>
+                          </a>
+
+                  </li>
+              </ul>
+          </li>
+      </div>
+  </ul>
+</nav>

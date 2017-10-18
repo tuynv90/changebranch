@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LayoutComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor(public router: Router) { }
+  
+      ngOnInit() {
+          if (this.router.url === '/') {
+              this.router.navigate(['/exam']);
+          }
+      }
 
 }

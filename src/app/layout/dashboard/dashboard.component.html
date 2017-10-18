@@ -1,3 +1,81 @@
-<p>
-  dashboard works!
-</p>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-block">
+      <ngb-tabset>
+        <ngb-tab title="Pending Aproval">
+          <ng-template ngbTabContent>
+            <div class="card-block table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Business Trip</th>
+                    <th>From</th>
+                    <th>To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of listPending; let i=index">
+                    <td>{{item.travel_dest}}</td>
+                    <td>{{item.depart_datetime | date:'MM/dd/yyyy'}}</td>
+                    <td>{{item.return_datetime | date:'MM/dd/yyyy'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row" *ngIf="totalItems > perpage">
+              <div class="col col-xl-4"></div>
+              <div class="col col-xl-5">
+                <ngb-pagination [collectionSize]="totalItems" [pageSize]="perpage" [(page)]="page" [maxSize]="7" [rotate]="false" (pageChange)="loadPage($event)"></ngb-pagination>
+              </div>
+              <div class="col col-xl-3"></div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Approved">
+          <ng-template ngbTabContent>
+            <div class="card-block table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Business Trip</th>
+                    <th>From</th>
+                    <th>To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of listApproved; let i=index">
+                    <td>{{item.travel_dest}}</td>
+                    <td>{{item.depart_datetime | date:'MM/dd/yyyy'}}</td>
+                    <td>{{item.return_datetime | date:'MM/dd/yyyy'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Rejected">
+          <ng-template ngbTabContent>
+            <div class="card-block table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Business Trip</th>
+                    <th>From</th>
+                    <th>To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of listRejected; let i=index">
+                    <td>{{item.travel_dest}}</td>
+                    <td>{{item.depart_datetime | date:'MM/dd/yyyy'}}</td>
+                    <td>{{item.return_datetime | date:'MM/dd/yyyy'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
+</div>

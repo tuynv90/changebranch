@@ -1,0 +1,57 @@
+<form #myInfoForm="ngForm">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input [disabled]="isEdit" type="text" class="form-control" id="employeeName" required [(ngModel)]="myInfo.employee_name"
+      name="employeeName" #employeeName="ngModel">
+    <div [hidden]="employeeName.valid || employeeName.pristine" class="alert alert-danger">
+      Employee name is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Employee ID</label>
+    <input disabled="disabled" type="text" class="form-control" id="employeeID" required [(ngModel)]="myInfo.email" name="employeeID"
+      #employeeID="ngModel">
+    <div [hidden]="employeeID.valid || employeeID.pristine" class="alert alert-danger">
+      Employee ID is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Department</label>
+    <input disabled="disabled" type="text" class="form-control" id="department" required [(ngModel)]="myInfo.dept_name" name="department"
+      #department="ngModel">
+    <div [hidden]="department.valid || department.pristine" class="alert alert-danger">
+      Department is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Email</label>
+    <input disabled="disabled" type="text" class="form-control" id="email" required [(ngModel)]="myInfo.email" name="email" #email="ngModel">
+    <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+      email is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Phone</label>
+    <input [disabled]="isEdit" type="text" class="form-control" id="phone" required [(ngModel)]="myInfo.phone_number" name="phone"
+      #phone="ngModel">
+    <div [hidden]="phone.valid || phone.pristine" class="alert alert-danger">
+      phone is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Date of Birth</label>
+    <input [disabled]="isEdit" type="text" class="form-control" id="birthday" required [(ngModel)]="myInfo.birthday" name="birthday"
+      #birthday="ngModel">
+    <div [hidden]="birthday.valid || birthday.pristine" class="alert alert-danger">
+      Birthday is required.
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name">Gender</label>
+    <input [disabled]="isEdit" type="radio" value="0" name="gender" [(ngModel)]="myInfo.gender" required #genderControl="ngModel">    Male
+    <input [disabled]="isEdit" type="radio" value="1" name="gender" [(ngModel)]="myInfo.gender" required> Female
+  </div>
+  <button *ngIf="isEdit" type="submit" class="btn btn-success" (click)="changeState()">Edit</button>
+  <button *ngIf="!isEdit" type="submit" class="btn btn-success" (click)="updateInfor()" [disabled]="!myInfoForm.form.valid">Save</button>
+  <button type="button" class="btn btn-default" (click)="goback()">Goback</button>
+</form>

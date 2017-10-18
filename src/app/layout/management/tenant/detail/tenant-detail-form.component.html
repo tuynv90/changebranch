@@ -1,0 +1,49 @@
+<div class="row" *ngIf="tenant">
+    <div class="col-xl-6 text-xs-center">
+        <div class="card-block">
+            <div *ngIf="alert">
+                <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
+            </div>
+        </div>
+        <div>
+            <form #tenantForm="ngForm">
+                <div class="form-group">
+                    <label for="name">Tenant Name</label>
+                    <input type="text" class="form-control" id="tenantName" required [(ngModel)]="tenant.tenant_name" name="tenantName" #tenantName="ngModel">
+                    <div [hidden]="tenantName.valid || tenantName.pristine" class="alert alert-danger">
+                        Tenant name is required.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selects Manager</label>
+                    <select class="form-control" [(ngModel)]="selectedManager" id="manager" name="manager" (change)="onChangeManager(selectedManager)">
+                                <option *ngFor="let manager of employeeService.cacheCandidateManagers" 
+                                [ngValue]="manager"
+                                    >{{manager.employee_name}}</option>
+                            </select>
+                    <!-- <div [hidden]="manager.valid || manager.pristine" class="alert alert-danger">
+                                    manager is required
+                                </div> -->
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea rows="3" type="text" class="form-control" id="description" [(ngModel)]="tenant.description" name="description"></textarea>
+                </div>
+
+
+                <button *ngIf="isEdit" type="submit" class="btn btn-success" (click)="updateTenant()" [disabled]="!tenantForm.form.valid">save</button>
+                <button *ngIf="!isEdit" type="submit" class="btn btn-success" (click)="addTenant()" [disabled]="!tenantForm.form.valid">save</button>
+                <button *ngIf="!isEdit" type="button" class="btn btn-default" (click)="tenantForm.reset()">New Hero</button>
+                <button type="button" class="btn btn-default" (click)="goback()">Goback</button>
+            </form>
+        </div>
+
+        <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-xl-4 text-xs-center">
+
+    </div>
+</div>

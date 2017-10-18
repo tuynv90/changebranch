@@ -1,0 +1,45 @@
+<div>
+  <!-- <app-page-header [heading]="'Tenant'" [icon]="'fa fa-chrome'"></app-page-header> -->
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="card mb-3">
+      <div class="card-header">
+          <!-- <i class="fa fa-plus"><a [router-link]="['/tenant/detail/new']"></a></i> -->
+          <a routerLink="/page/request/detail/new" routerLinkActive="active"><i class="fa fa-plus"></i></a>
+          &nbsp;&nbsp;
+          <span>List Request </span>
+
+      </div>
+      <div class="card-block table-responsive">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>No</th>
+                      <th>Accompanied By</th>
+                      <th>Purpose</th>
+                      <th>Trip To</th>
+                      <th>Update</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of requestInfor; let i=index">
+                      <th scope="row">{{i+1}}</th>
+                      <td>{{item.accompanied_by}}</td>
+                      <td>{{item.purpose}}</td>
+                      <td>{{item.travel_dest}}</td>
+                      <td><button type="button" class="btn btn-sm btn-info" (click)="editRequest(item.trip_id)">Edit</button>&nbsp;
+                          <app-modal-confirm [id]="item.trip_id" [title]="'Request'" (deleted)="deleted($event)"></app-modal-confirm>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <div class="row" *ngIf="totalItems > perpage" >
+              <div class="col col-xl-4"></div>
+              <div class="col col-xl-5">
+                  <ngb-pagination [collectionSize]="totalItems" [pageSize]="perpage" [(page)]="page" [maxSize]="7" [rotate]="false" (pageChange)="loadPage($event)"></ngb-pagination>
+              </div>
+              <div class="col col-xl-3"></div>
+          </div>
+      </div>
+  </div>
+
+</div>
