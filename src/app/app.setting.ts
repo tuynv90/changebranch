@@ -5,7 +5,7 @@ export class AppSettings {
     
     //for paging
     public static PAGE = 1;
-    public static PER_PAGE = 2;
+    public static PER_PAGE = 10;
     public static TOKEN = 'token';
     public static USER = 'user';
     public static SUCCESS = 1;

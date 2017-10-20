@@ -9,7 +9,7 @@ export const LAYOUT_ROUTES : Routes = [
     {
         path: '', component: LayoutComponent,
         children: [
-            { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'tenant', loadChildren: './management/tenant/tenant.module#TenantModule' },
             { path: 'department', loadChildren: './management/department/department.module#DepartmentModule' },
             { path: 'jobgrade', loadChildren: './management/jobgrade/jobgrade.module#JobgradeModule' },

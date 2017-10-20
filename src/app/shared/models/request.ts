@@ -3,6 +3,7 @@ export class RequestInfor {
     public employee_id?: number;
     public accompanied_by?: string;
     public purpose?: string;
+    public travel_from? : string;
     public travel_dest?: string;
     public depart_datetime?: string;
     public return_datetime?: string;

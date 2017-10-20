@@ -20,7 +20,7 @@ import { PageHeaderComponent } from '../shared/components/page-header/page-heade
     NgbDropdownModule.forRoot(),
     NgbModule.forRoot(),
   ],
-  declarations: [LayoutComponent, DashboardComponent, HeaderComponent,
+  declarations: [LayoutComponent, HeaderComponent,
     SidebarComponent,
     MyInforComponent]
 })

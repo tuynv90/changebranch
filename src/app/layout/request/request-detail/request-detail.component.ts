@@ -203,6 +203,7 @@ export class RequestDetailComponent implements OnInit {
       this.showInfo = {
         accompanied_by: this.requestInfor.accompanied_by,
         travel_dest: this.requestInfor.travel_dest,
+        travel_from : this.requestInfor.travel_from,
         depart_datetime: moment(this.requestInfor.depart_datetime).format('YYYY-MM-DD'),
         return_datetime: moment(this.requestInfor.return_datetime).format('YYYY-MM-DD'),
         purpose: this.requestInfor.purpose,
@@ -266,6 +267,7 @@ export class RequestDetailComponent implements OnInit {
     let data: RequestInfor = {
       employee_id: this.userLogin['employee_id'],
       accompanied_by: this.showInfo.accompanied_by,
+      travel_from : this.showInfo.travel_from,
       travel_dest: this.showInfo.travel_dest,
       depart_datetime: startDate,
       return_datetime: endDate,
@@ -276,7 +278,9 @@ export class RequestDetailComponent implements OnInit {
       if (result.success === 1) {
         alert(result.message);
         this.requestInfor = result.data;
+        this.isEdit == true;
         localStorage.setItem(AppSettings.TRIP_ID, String(this.requestInfor.trip_id));
+        this.trip_id = this.requestInfor.trip_id;
         this.sumaryRequest = [
           { allowance_name: 'Land Transport', depart_datetime: moment(this.requestInfor.depart_datetime).format('YYYY-MM-DD'), return_datetime: moment(this.requestInfor.return_datetime).format('YYYY-MM-DD'), total_days: (moment(this.requestInfor.return_datetime).unix() - moment(this.requestInfor.depart_datetime).unix()) / (60 * 60 * 24), expense: this.requestInfor.land_transport_expense },
           { allowance_name: 'Air Transport', depart_datetime: moment(this.requestInfor.depart_datetime).format('YYYY-MM-DD'), return_datetime: moment(this.requestInfor.return_datetime).format('YYYY-MM-DD'), total_days: (moment(this.requestInfor.return_datetime).unix() - moment(this.requestInfor.depart_datetime).unix()) / (60 * 60 * 24), expense: this.requestInfor.air_transport_expense },

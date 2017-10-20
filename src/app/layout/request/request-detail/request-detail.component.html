@@ -19,33 +19,46 @@
                   Accompanied is required.
                 </div>
               </div>
-              <div class="input-group date" data-provide="datepicker">
-                  <input type="text" class="form-control">
-                  <div class="input-group-addon">
-                      <span class="glyphicon glyphicon-th"></span>
+              <div class="form-group request-row">
+                  <label for="name">Trip From (*)</label>
+                  <input type="text" class="form-control" id="travel_from" required [(ngModel)]="showInfo.travel_from" name="travel_from" #travel_from="ngModel">
+                  <div [hidden]="travel_from.valid || travel_from.pristine" class="alert alert-danger">
+                    Trip From is required.
                   </div>
-              </div>
+                </div>
               <div class="form-group request-row">
                 <label for="name">Trip To (*)</label>
-                <input type="text" class="form-control" id="travel_dest" required [(ngModel)]="showInfo.travel_dest" name="travel_dest"
-                  #travel_dest="ngModel">
+                <input type="text" class="form-control" id="travel_dest" required [(ngModel)]="showInfo.travel_dest" name="travel_dest" #travel_dest="ngModel">
                 <div [hidden]="travel_dest.valid || travel_dest.pristine" class="alert alert-danger">
                   Trip To is required.
                 </div>
               </div>
 
-              
-                <div class="form-group request-row">
-                  <label for="name">Start Date (*)</label>
-                  <input class="form-control" id="depart_datetime" required [(ngModel)]="showInfo.depart_datetime" type="date" [ngModelOptions]="{standalone: true}"
-                    name="depart_datetime" #depart_datetime value="{{showInfo.depart_datetime}}">
-
-                  <div [hidden]="depart_datetime.valid || depart_datetime.pristine" class="alert alert-danger">
-                    Start Date is required.
+              <div class="form-group form-inline mb-3">
+                  <label for="name" style="margin-right: 15%">Start Date (*)</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="{{showInfo.depart_datetime || 'yyyy-mm-dd'}}" name="dp" id="depart_datetime" required [(ngModel)]="showInfo.depart_datetime" ngbDatepicker #d="ngbDatepicker">
+                  <div class="input-group-addon" (click)="d.toggle()" #depart_datetime>
+                    <span class="fa fa-calendar"></span>
                   </div>
+                  <!-- <div [hidden]="depart_datetime.valid || depart_datetime.pristine" class="alert alert-danger">
+                      Start Date is required.
+                    </div> -->
                 </div>
-              
-              <div class="form-group">
+              </div>
+              <div class="form-group form-inline mb-3">
+                  <label for="name" style="margin-right: 16%">End Date (*)</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="{{showInfo.return_datetime || 'yyyy-mm-dd'}}" name="dp" id="return_datetime" required [(ngModel)]="showInfo.return_datetime" ngbDatepicker #d1="ngbDatepicker">
+                  <div class="input-group-addon" (click)="d1.toggle()" #return_datetime>
+                    <span class="fa fa-calendar"></span>
+                  </div>
+                  <!-- <div [hidden]="depart_datetime.valid || depart_datetime.pristine" class="alert alert-danger">
+                      Start Date is required.
+                    </div> -->
+                </div>
+              </div>
+              <!-- <div class="form-group">
                 <div class="input-group request-row">
                   <label for="name">End Date (*)</label>
                   <!-- <input class="form-control" placeholder="yyyy-mm-dd" id="return_datetime" required [(ngModel)]="showInfo.return_datetime"
@@ -53,13 +66,13 @@
                   <div class="input-group-addon" (click)="d2.toggle()">
                     <span class="fa fa-calendar"></span>
                   </div> -->
-                  <input class="form-control" id="return_datetime" required [(ngModel)]="showInfo.return_datetime" type="date" [ngModelOptions]="{standalone: true}"
-                  name="return_datetime" #return_datetime value="{{showInfo.return_datetime}}">
+                  <!-- <input class="form-control" id="return_datetime" required [(ngModel)]="showInfo.return_datetime" type="date" [ngModelOptions]="{standalone: true}"
+                    name="return_datetime" #return_datetime value="{{showInfo.return_datetime}}">
                   <div [hidden]="return_datetime.valid || return_datetime.pristine" class="alert alert-danger">
                     End Date is required.
                   </div>
                 </div>
-              </div>
+              </div> --> 
 
               <div class="form-group">
                 <label for="name">Purpose To Travel (*)</label>
@@ -125,8 +138,8 @@
                     <label>VND {{item.rate_per_km}}</label>
                   </td>
                   <td>{{item.calculation}}</td>
+                  <td>{{item.grand_total_USD}}</td>
                   <td>{{item.grand_total}}</td>
-                  <td>{{item.grand_total_VND}}</td>
                   <td>{{item.remark}}</td>
               </tr>
 
@@ -460,7 +473,7 @@
                 <th scope="col">LUNCH</th>
                 <th scope="col">DINNER</th>
                 <th scope="col">TOTAL</th>
-                <th scope="col">FROM</th>
+                <th scope="col" width="10%">FROM</th>
                 <th scope="col">TO</th>
               </tr>
             </thead>
@@ -485,7 +498,7 @@
                   <input #total disabled id="total" type="number" value="{{item.total}}" [ngModelOptions]="{standalone: true}" class="form-control"
                     [(ngModel)]="item.total">
                 </td>
-                <td>
+                <td style="width:10%">
                   <input #travel_from id="travel_from" type="date" value="{{item.travel_from}}" [ngModelOptions]="{standalone: true}" class="form-control"
                     [(ngModel)]="item.travel_from" (change)="calMealDay(item.no)">
                 </td>

@@ -1,4 +1,12 @@
 <form #myInfoForm="ngForm">
+    <div class="form-group">
+        <label for="name">Employee No</label>
+        <input disabled="disabled" type="text" class="form-control" id="employeeNo" required [(ngModel)]="myInfo.employee_no"
+          name="employeeNo" #employeeNo="ngModel">
+        <div [hidden]="employeeNo.valid || employeeNo.pristine" class="alert alert-danger">
+          Employee No is required.
+        </div>
+      </div>
   <div class="form-group">
     <label for="name">Name</label>
     <input [disabled]="isEdit" type="text" class="form-control" id="employeeName" required [(ngModel)]="myInfo.employee_name"
@@ -38,18 +46,25 @@
       phone is required.
     </div>
   </div>
-  <div class="form-group">
-    <label for="name">Date of Birth</label>
-    <input [disabled]="isEdit" type="text" class="form-control" id="birthday" required [(ngModel)]="myInfo.birthday" name="birthday"
-      #birthday="ngModel">
-    <div [hidden]="birthday.valid || birthday.pristine" class="alert alert-danger">
+  <div class="form-group form-inline mb-3">
+    <label for="name" style="margin-right: 10%">Date of Birth</label>
+    <!-- <input [disabled]="isEdit" type="text" class="form-control" id="birthday" required [(ngModel)]="myInfo.birthday" name="birthday"
+      #birthday="ngModel"> -->
+      <div class="input-group">
+      <input class="form-control" [disabled]="isEdit" placeholder="{{myInfo.birthday || 'yyyy-mm-dd'}}" name="dp" id="birthday" required [(ngModel)]="myInfo.birthday" ngbDatepicker #d1="ngbDatepicker">
+      <div class="input-group-addon" (click)="d1.toggle()" >
+        <span class="fa fa-calendar"></span>
+      </div>
+      </div>
+
+    <!-- <div [hidden]="birthday.valid || birthday.pristine" class="alert alert-danger">
       Birthday is required.
-    </div>
+    </div> -->
   </div>
   <div class="form-group">
-    <label for="name">Gender</label>
-    <input [disabled]="isEdit" type="radio" value="0" name="gender" [(ngModel)]="myInfo.gender" required #genderControl="ngModel">    Male
-    <input [disabled]="isEdit" type="radio" value="1" name="gender" [(ngModel)]="myInfo.gender" required> Female
+    <label for="name" style="margin-right: 13%">Gender</label>
+    <input [disabled]="isEdit" type="radio" value="0" name="gender" [(ngModel)]="myInfo.gender" required #genderControl="ngModel" [checked]="myInfo.gender==0">    Male
+    <input [disabled]="isEdit" type="radio" value="1" name="gender" [(ngModel)]="myInfo.gender" required [checked]="myInfo.gender==1"> Female
   </div>
   <button *ngIf="isEdit" type="submit" class="btn btn-success" (click)="changeState()">Edit</button>
   <button *ngIf="!isEdit" type="submit" class="btn btn-success" (click)="updateInfor()" [disabled]="!myInfoForm.form.valid">Save</button>

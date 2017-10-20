@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RequestInfor } from '../../../shared/models/request';
 import { AppSettings } from '../../../app.setting';
 import { RequestService } from '../../../shared/services/request.service';
+import { StatusType } from '../../../shared/enums/status.enum';
 
 @Component({
   selector: 'app-request-list',
@@ -18,6 +19,7 @@ export class RequestListComponent implements OnInit {
   perpage: number = AppSettings.PER_PAGE;
   page: number = AppSettings.PAGE;
   userLogin:Object;
+  statusType = StatusType;
   constructor(
       private requestService: RequestService,
       private modalService: NgbModal,
@@ -31,7 +33,7 @@ export class RequestListComponent implements OnInit {
   ngOnInit() {
       this.requestService.getMyRequests(this.page, this.perpage, this.userLogin['employee_id']).subscribe(result => {
           if (result['success'] === 1) {
-              this.requestInfor = result['data'];
+              this.requestInfor = result['datas'];
               this.totalItems = result['rows'];
           }
       })
